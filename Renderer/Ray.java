@@ -2,16 +2,12 @@ import processing.core.*;
 
 public class Ray {
     public Point start;
-    public Point end;
-    public Ray(Point start, Point end){
+    public PVector direction;
+    public Ray(Point start, PVector direction){
         this.start = start;
-        this.end = end;
+        this.direction = direction;
     }
-    public float getMag(){
-        return new PVector(end.x - start.x, end.y - start.y, end.z - start.z).mag();
-    }
-    public static void test(){
-        PVector test = new PVector(5, 5);
-        System.out.println(test.mag());
+    public PVector at(float t){
+        return PVector.add(this.start, PVector.mult(direction, t));
     }
 }
