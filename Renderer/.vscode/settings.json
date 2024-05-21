@@ -1,0 +1,6 @@
+{
+	"java.project.referencedLibraries": [
+		"/usr/local/bin/processing-4.3",
+		"/usr/local/bin/processing-4.3/**/*.jar"
+	]
+}
