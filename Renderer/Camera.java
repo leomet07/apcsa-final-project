@@ -26,12 +26,9 @@ public class Camera {
     public PVector viewport_upper_left = PVector.sub(
             PVector.sub(PVector.sub(eye, new PVector(0, 0, focal_length)), PVector.mult(viewport_u, 2)),
             PVector.mult(viewport_v, 2));
-    // public PVector viewport_upper_left = camera_center - vec3(0, 0, focal_length)
-    // - viewport_u/2 - viewport_v/2;
+
     public PVector pixel00_loc = PVector.add(viewport_upper_left,
             PVector.mult(PVector.add(pixel_delta_u, pixel_delta_v), (float) 0.5));
-    // public PVector pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u +
-    // pixel_delta_v);
 
     public Camera(PApplet pa) {
         this.pa = pa;
@@ -48,7 +45,7 @@ public class Camera {
 
     public void see() {
         System.out.println("P3\n" + image_width + " " + image_height + "\n255\n");
-
+        this.pa.loadPixels();
         for (int j = 0; j < image_height; j++) {
             if (j % 25 == 0 || j == image_height - 1) {
                 System.out.println("\rScanlines remaining: " + (image_height - j) + " \n\n\n");
@@ -58,20 +55,15 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                // ray r(camera_center, ray_direction);
-
-                // color pixel_color = ray_color(r);
-                // write_color(std::cout, pixel_color);
                 float rayColor = getRayColor(rayToPixel);
-                // System.out.print(rayColor + " ");
-                int x = i;
-                int y = j;
-                this.pa.loadPixels();
+                int x = j;
+                int y = i;
+
                 this.pa.pixels[y * this.image_width + x] = this.pa.color(rayColor);
-                this.pa.updatePixels();
 
             }
         }
+        this.pa.updatePixels();
     }
 
     public float getRayColor(Ray r) {
