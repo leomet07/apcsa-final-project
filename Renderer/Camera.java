@@ -24,8 +24,8 @@ public class Camera {
 
     // Calculate the location of the upper left pixel.
     public PVector viewport_upper_left = PVector.sub(
-            PVector.sub(PVector.sub(eye, new PVector(0, 0, focal_length)), PVector.mult(viewport_u, 2)),
-            PVector.mult(viewport_v, 2));
+            PVector.sub(PVector.sub(eye, new PVector(0, 0, focal_length)), PVector.div(viewport_u, 2)),
+            PVector.div(viewport_v, 2));
 
     public PVector pixel00_loc = PVector.add(viewport_upper_left,
             PVector.mult(PVector.add(pixel_delta_u, pixel_delta_v), (float) 0.5));
@@ -57,25 +57,25 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                float rayColor = getRayColor(rayToPixel, mySphere);
-                int x = j;
-                int y = i;
+                int rayColor = getRayColor(rayToPixel, mySphere);
+                int x = i;
+                int y = j;
 
-                int useColor = this.pa.color(rayColor);
+                // int useColor = this.pa.color(rayColor);
 
-                this.pa.pixels[y * this.image_width + x] = useColor;
+                this.pa.pixels[y * this.image_width + x] = rayColor;
 
             }
         }
         this.pa.updatePixels();
     }
 
-    public float getRayColor(Ray r, Sphere sphere) {
+    public int getRayColor(Ray r, Sphere sphere) {
         if (sphere.hit_sphere(r)) {
             System.out.println("HIT SPHERE");
             return pa.color(255, 0, 0);
         }
-        System.out.println(r.direction);
-        return (r.unitDirection.y) * 100;
+        // System.out.println(r.direction);
+        return pa.color(0, 0, ((r.unitDirection.y) * 100));
     }
 }
