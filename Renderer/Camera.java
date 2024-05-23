@@ -44,6 +44,8 @@ public class Camera {
     // }
 
     public void see() {
+        Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
+
         System.out.println("P3\n" + image_width + " " + image_height + "\n255\n");
         this.pa.loadPixels();
         for (int j = 0; j < image_height; j++) {
@@ -51,23 +53,29 @@ public class Camera {
                 System.out.println("\rScanlines remaining: " + (image_height - j) + " \n\n\n");
             }
             for (int i = 0; i < image_width; i++) {
-                PVector pixel_center = PVector.add(pixel00_loc, PVector.mult(pixel_delta_u, i),
+                PVector pixel_center = PVector.add(PVector.add(pixel00_loc, PVector.mult(pixel_delta_u, i)),
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                float rayColor = getRayColor(rayToPixel);
+                float rayColor = getRayColor(rayToPixel, mySphere);
                 int x = j;
                 int y = i;
 
-                this.pa.pixels[y * this.image_width + x] = this.pa.color(rayColor);
+                int useColor = this.pa.color(rayColor);
+
+                this.pa.pixels[y * this.image_width + x] = useColor;
 
             }
         }
         this.pa.updatePixels();
     }
 
-    public float getRayColor(Ray r) {
-        // System.out.println(r.direction.y);
-        return (r.direction.y - (float) 0.7) * 400;
+    public float getRayColor(Ray r, Sphere sphere) {
+        if (sphere.hit_sphere(r)) {
+            System.out.println("HIT SPHERE");
+            return pa.color(255, 0, 0);
+        }
+        System.out.println(r.direction);
+        return (r.unitDirection.y) * 100;
     }
 }
