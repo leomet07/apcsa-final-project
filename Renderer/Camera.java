@@ -39,11 +39,12 @@ public class Camera {
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
 
-        System.out.println("P3\n" + image_width + " " + image_height + "\n255\n");
+        // System.out.println("P3\n" + image_width + " " + image_height + "\n255\n");
         this.pa.loadPixels();
         for (int j = 0; j < image_height; j++) {
             if (j % 25 == 0 || j == image_height - 1) {
-                System.out.println("\rScanlines remaining: " + (image_height - j) + " \n\n\n");
+                // System.out.println("\rScanlines remaining: " + (image_height - j) + "
+                // \n\n\n");
             }
             for (int i = 0; i < image_width; i++) {
                 PVector pixel_center = PVector.add(PVector.add(pixel00_loc, PVector.mult(pixel_delta_u, i)),
@@ -62,7 +63,7 @@ public class Camera {
 
     public int getRayColor(Ray r, Sphere sphere) {
         if (sphere.hit_sphere(r)) {
-            System.out.println("HIT SPHERE");
+            // System.out.println("HIT SPHERE");
             return pa.color(255, 0, 0);
         }
         return pa.color(0, 0, ((r.unitDirection.y) * 100));

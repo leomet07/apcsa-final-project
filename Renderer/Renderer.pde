@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Renderer extends PApplet {
 
@@ -16,11 +17,21 @@ public class Renderer extends PApplet {
     @Override
     public void setup() {
         // fill(120,50,240);
-        cam.see();
     }
-
+    
     @Override
     public void draw(){
+        if (keyPressed) {
+            if (key == 'w' || key == 'W') {
+                cam.eye.add(new PVector(0, 0, 0.02));
+            }
+            if (key == 's' || key == 'S') {
+                cam.eye.add(new PVector(0, 0, -0.02));
+            }
+        }
+        cam.see();
         // ellipse(width/2,height/2,second(),second());
     }
+
+
 }
