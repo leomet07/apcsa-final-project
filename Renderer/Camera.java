@@ -36,13 +36,6 @@ public class Camera {
         this.image_height = (image_height < 1) ? 1 : image_height;
     }
 
-    // public void see(){
-    // PVector dir = new PVector(0, (float) (Math.sqrt(2) / 2), (float)
-    // (Math.sqrt(2) / 2));
-    // Ray rayToP = new Ray(this.eye, dir);
-    // System.out.println(rayToP.at(2));
-    // }
-
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
 
@@ -60,9 +53,6 @@ public class Camera {
                 int rayColor = getRayColor(rayToPixel, mySphere);
                 int x = i;
                 int y = j;
-
-                // int useColor = this.pa.color(rayColor);
-
                 this.pa.pixels[y * this.image_width + x] = rayColor;
 
             }
@@ -75,7 +65,6 @@ public class Camera {
             System.out.println("HIT SPHERE");
             return pa.color(255, 0, 0);
         }
-        // System.out.println(r.direction);
         return pa.color(0, 0, ((r.unitDirection.y) * 100));
     }
 }
