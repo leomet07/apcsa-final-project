@@ -9,7 +9,7 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public double hit_sphere(Ray r) {
+    public boolean hit_sphere(Ray r, double ray_tmin, double ray_tmax, Hit rec) {
         PVector oc = PVector.sub(this.center, r.start);
         float a = (float) Math.pow(r.direction.mag(), 2);
         float h = PVector.dot(r.direction, oc);
@@ -17,10 +17,22 @@ public class Sphere {
         float discriminant = h * h - a * c;
 
         if (discriminant < 0) {
-            return -1.0;
-        } else {
-            // discriminant of 0 or more means at least one collision
-            return (h - Math.sqrt(discriminant)) / (a);
+            return false;
+
         }
+
+        double sqrtd = Math.sqrt(discriminant);
+        double root = (h - sqrtd) / a;
+        if (root <= ray_tmin || ray_tmax <= root) {
+            root = (h + sqrtd) / a;
+            if (root <= ray_tmin || ray_tmax <= root)
+                return false;
+        }
+        rec.t = root;
+        rec.location = r.at((float) rec.t);
+        PVector outward_normal = PVector.div(PVector.sub(rec.location, this.center), radius);
+        rec.set_face_normal(r, outward_normal);
+
+        return true;
     }
 }
