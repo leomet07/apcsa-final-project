@@ -52,9 +52,14 @@ public class Camera {
         PVector pixel_delta_v = PVector.div(viewport_v, image_height);
 
         // Calculate the location of the upper left pixel.
+        // PVector viewport_upper_left = PVector.sub(
+        // PVector.sub(PVector.sub(eye, PVector.mult(w, focal_length)),
+        // PVector.div(viewport_u, 2)),
+        // PVector.div(viewport_v, 2)); // to always LOOK at the "lookat" point (rotate
+        // towards it as needed)
         PVector viewport_upper_left = PVector.sub(
                 PVector.sub(PVector.sub(eye, new PVector(0, 0, focal_length)), PVector.div(viewport_u, 2)),
-                PVector.div(viewport_v, 2));
+                PVector.div(viewport_v, 2)); // to always LOOK forwards
 
         PVector pixel00_loc = PVector.add(viewport_upper_left,
                 PVector.mult(PVector.add(pixel_delta_u, pixel_delta_v), (float) 0.5));
