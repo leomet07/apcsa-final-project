@@ -22,13 +22,16 @@ public class Camera {
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
         Sphere mySecondSphere = new Sphere(new PVector(0, -2, -3), (float) 0.5);
+        Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
+
         HittableList world = new HittableList();
         world.add(mySphere);
         world.add(mySecondSphere);
+        world.add(myGround);
 
         // Camera stuffs
         float focal_length = PVector.sub(eye, lookat).mag();
-        double fov = 90; // 90 degrees FOV
+        double fov = 75; // 90 degrees FOV
         double theta = fov * Math.PI / 180.0; // radians total of FOV
         float h = (float) Math.tan(theta / 2); // from center of viewport to top/bottom
         float viewport_height = 2 * h * focal_length;
@@ -91,6 +94,7 @@ public class Camera {
     }
 
     public int getRayColor(Ray r, HittableList world) {
+        // TODO: RENDER THE INDIVIDUAL NORMALS ON A HITTABLELIST
         Hit rec = new Hit();
         if (world.hit(r, 0, Double.MAX_VALUE, rec)) {
             PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));

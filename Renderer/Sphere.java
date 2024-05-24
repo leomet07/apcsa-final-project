@@ -30,7 +30,8 @@ public class Sphere implements Hittable {
         }
         rec.t = root;
         rec.location = r.at((float) rec.t);
-        PVector outward_normal = PVector.div(PVector.sub(rec.location, this.center), radius);
+        PVector outward_normal = PVector.div(PVector.sub(rec.location, this.center),
+                radius);
         rec.set_face_normal(r, outward_normal);
 
         return true;
