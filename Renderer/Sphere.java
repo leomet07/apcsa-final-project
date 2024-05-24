@@ -9,12 +9,18 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public boolean hit_sphere(Ray r) {
+    public double hit_sphere(Ray r) {
         PVector oc = PVector.sub(this.center, r.start);
         float a = PVector.dot(r.direction, r.direction);
         float b = -2 * PVector.dot(r.direction, oc);
         float c = PVector.dot(oc, oc) - (radius * radius);
         float discriminant = b * b - 4 * a * c;
-        return (discriminant >= 0); // discriminant of 0 or more means at least one collision
+
+        if (discriminant < 0) {
+            return -1.0;
+        } else {
+            // discriminant of 0 or more means at least one collision
+            return (-b - Math.sqrt(discriminant)) / (2.0 * a);
+        }
     }
 }

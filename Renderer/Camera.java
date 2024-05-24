@@ -87,9 +87,10 @@ public class Camera {
     }
 
     public int getRayColor(Ray r, Sphere sphere) {
-        if (sphere.hit_sphere(r)) {
-            // System.out.println("HIT SPHERE");
-            return pa.color(255, 0, 0);
+        double t = sphere.hit_sphere(r);
+        if (t > 0.0) {
+            PVector N = PVector.sub(r.at((float) t), new PVector(0, 0, -1));
+            return pa.color((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125);
         }
         return pa.color(0, 0, ((r.unitDirection.y) * 100));
     }
