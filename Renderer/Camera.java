@@ -21,6 +21,10 @@ public class Camera {
 
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
+        Sphere mySecondSphere = new Sphere(new PVector(0, -2, -3), (float) 0.5);
+        HittableList world = new HittableList();
+        world.add(mySphere);
+        world.add(mySecondSphere);
 
         // Camera stuffs
         float focal_length = PVector.sub(eye, lookat).mag();
@@ -76,7 +80,7 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int rayColor = getRayColor(rayToPixel, mySphere);
+                int rayColor = getRayColor(rayToPixel, world);
                 int x = i;
                 int y = j;
                 this.pa.pixels[y * this.image_width + x] = rayColor;
@@ -86,9 +90,9 @@ public class Camera {
         this.pa.updatePixels();
     }
 
-    public int getRayColor(Ray r, Sphere sphere) {
+    public int getRayColor(Ray r, HittableList world) {
         Hit rec = new Hit();
-        if (sphere.hit_sphere(r, 0, Double.MAX_VALUE, rec)) {
+        if (world.hit(r, 0, Double.MAX_VALUE, rec)) {
             PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
             return pa.color((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125);
         }

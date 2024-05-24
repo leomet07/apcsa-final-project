@@ -1,6 +1,6 @@
 import processing.core.PVector;
 
-public class Sphere {
+public class Sphere implements Hittable {
     PVector center;
     float radius;
 
@@ -9,7 +9,7 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public boolean hit_sphere(Ray r, double ray_tmin, double ray_tmax, Hit rec) {
+    public boolean hit(Ray r, double ray_tmin, double ray_tmax, Hit rec) {
         PVector oc = PVector.sub(this.center, r.start);
         float a = (float) Math.pow(r.direction.mag(), 2);
         float h = PVector.dot(r.direction, oc);
