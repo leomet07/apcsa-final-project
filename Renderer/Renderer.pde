@@ -28,9 +28,17 @@ public class Renderer extends PApplet {
             if (key == 's' || key == 'S') {
                 cam.eye.add(new PVector(0, 0, -0.02));
             }
+            if (key == 'a' || key == 'A') {
+                cam.eye.add(new PVector(-0.02, 0, 0));
+            }
+            if (key == 'd' || key == 'D') {
+                cam.eye.add(new PVector(0.02, 0, 0));
+            }
         }
         cam.see();
-        // ellipse(width/2,height/2,second(),second());
+        textSize(40);
+        String text = "" + cam.eye.x + ", " + cam.eye.y + ", " + cam.eye.z;
+        text(text, 40, 60);
     }
 
 

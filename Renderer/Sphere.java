@@ -7,7 +7,6 @@ public class Sphere {
     public Sphere(PVector center, float radius) {
         this.center = center;
         this.radius = radius;
-        System.out.println("RADIUS: " + radius);
     }
 
     public boolean hit_sphere(Ray r) {
