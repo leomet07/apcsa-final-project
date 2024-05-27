@@ -22,7 +22,7 @@ public class Camera {
 
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
-        Sphere mySecondSphere = new Sphere(new PVector(0, -2, -3), (float) 0.5);
+        Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
         Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
 
         HittableList world = new HittableList();
