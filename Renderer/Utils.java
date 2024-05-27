@@ -16,7 +16,7 @@ public class Utils {
     
     public static PVector random_on_hemisphere(PVector normal) {
         PVector on_unit_sphere = PVector.random3D();
-        System.out.println("Before dot: " + normal);
+        // System.out.println("Before dot: " + normal);
         if (PVector.dot(on_unit_sphere, normal) > 0.0){ // In the same hemisphere as the normal
             return on_unit_sphere;
         }

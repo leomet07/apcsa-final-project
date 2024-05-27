@@ -2,6 +2,7 @@ import processing.core.*;
 
 public class Camera {
     PApplet pa;
+    public int max_depth = 10;
     public float aspect_ratio = 1 / 1;
     public int image_width = 500;
 
@@ -83,7 +84,7 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int rayColor = getRayColor(rayToPixel, world);
+                int rayColor = getRayColor(rayToPixel, this.max_depth, world);
                 int x = i;
                 int y = j;
                 this.pa.pixels[y * this.image_width + x] = rayColor;
@@ -93,17 +94,22 @@ public class Camera {
         this.pa.updatePixels();
     }
 
-    public int getRayColor(Ray r, HittableList world) {
+    public int getRayColor(Ray r, int depth, HittableList world) {
+        if (depth <= 0){
+            return pa.color(0,0,0);
+        }
+
         // TODO: RENDER THE INDIVIDUAL NORMALS ON A HITTABLELIST
-        Hit rec = world.hit(r, 0, Double.MAX_VALUE);
+        Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
         if (rec.hitHappened) {
             PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
-            System.out.println("REC BEFORE NULL: " + rec);
-            System.out.println("REC BEFORE NULL2: " + rec.normal);
+            // System.out.println("REC BEFORE NULL: " + rec);
+            // System.out.println("REC BEFORE NULL2: " + rec.normal);
             PVector direction = Utils.random_on_hemisphere(rec.normal);
-            return pa.color((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125);
-            //return  getRayColor(new Ray(rec.location, direction), world) / 2;
+            // return pa.color((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125); // rainbow normals
+            
+            return   getRayColor(new Ray(rec.location, direction), depth -1 ,world); // TODO: divide this by 2 somehow
         }
-        return pa.color(0, 0, ((r.unitDirection.y) * 100));
+        return pa.color(0, 0, ((r.unitDirection.y) * 190));
     }
 }
