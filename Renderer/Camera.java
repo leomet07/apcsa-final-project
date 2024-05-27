@@ -95,10 +95,14 @@ public class Camera {
 
     public int getRayColor(Ray r, HittableList world) {
         // TODO: RENDER THE INDIVIDUAL NORMALS ON A HITTABLELIST
-        Hit rec = new Hit();
-        if (world.hit(r, 0, Double.MAX_VALUE, rec)) {
+        Hit rec = world.hit(r, 0, Double.MAX_VALUE);
+        if (rec.hitHappened) {
             PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
+            System.out.println("REC BEFORE NULL: " + rec);
+            System.out.println("REC BEFORE NULL2: " + rec.normal);
+            PVector direction = Utils.random_on_hemisphere(rec.normal);
             return pa.color((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125);
+            //return  getRayColor(new Ray(rec.location, direction), world) / 2;
         }
         return pa.color(0, 0, ((r.unitDirection.y) * 100));
     }

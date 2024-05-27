@@ -1,11 +1,11 @@
 import processing.core.*;
 
 public class Ray {
-    public Point start;
+    public PVector start;
     public PVector direction;
     public PVector unitDirection;
 
-    public Ray(Point start, PVector direction) {
+    public Ray(PVector start, PVector direction) {
         this.start = start;
         this.direction = direction;
         this.unitDirection = direction.normalize(null);
