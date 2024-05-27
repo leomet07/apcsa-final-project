@@ -99,7 +99,6 @@ public class Camera {
             return pa.color(0,0,0);
         }
 
-        // TODO: RENDER THE INDIVIDUAL NORMALS ON A HITTABLELIST
         Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
         if (rec.hitHappened) {
             PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
