@@ -3,6 +3,7 @@ import processing.core.PVector;
 public class Sphere implements Hittable {
     PVector center;
     float radius;
+    String type = "sphere";
 
     public Sphere(PVector center, float radius) {
         this.center = center;

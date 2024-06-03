@@ -21,13 +21,19 @@ public class Camera {
     }
 
     public void see() {
-        Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
-        Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
+        // Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
+        // Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
         Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
 
+        PVector p1 = new PVector((float) -2, (float) 0, (float) -4);
+        PVector p2 = new PVector((float) 2, (float) 0, (float) -4);
+        PVector p3 = new PVector((float) 0, (float) 2, (float) -4);
+        Triangle myTriangle = new Triangle(p1, p2, p3);
+
         HittableList world = new HittableList();
-        world.add(mySphere);
-        world.add(mySecondSphere);
+        world.add(myTriangle);
+        // world.add(mySphere);
+        // world.add(mySecondSphere);
         world.add(myGround);
 
         // Camera stuffs
@@ -84,7 +90,15 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int rayColor = getRayColor(rayToPixel, this.max_depth, world);
+                int runs_to_average = 1;
+                PVector rayColorVectorSum = new PVector(0, 0, 0);
+                for (int z = 0; z < runs_to_average; z++) {
+                    PVector rayColorVector = getRayColorVector(rayToPixel, this.max_depth, world);
+                    rayColorVectorSum.add(rayColorVector);
+                }
+                rayColorVectorSum.div(runs_to_average);
+
+                int rayColor = this.pa.color(rayColorVectorSum.x, rayColorVectorSum.y, rayColorVectorSum.z);
                 int x = i;
                 int y = j;
                 this.pa.pixels[y * this.image_width + x] = rayColor;
@@ -94,9 +108,9 @@ public class Camera {
         this.pa.updatePixels();
     }
 
-    public int getRayColor(Ray r, int depth, HittableList world) {
-        if (depth <= 0){
-            return pa.color(0,0,0);
+    public PVector getRayColorVector(Ray r, int depth, HittableList world) {
+        if (depth <= 0) {
+            return new PVector(0, 0, 0);
         }
 
         Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
@@ -105,10 +119,16 @@ public class Camera {
             // System.out.println("REC BEFORE NULL: " + rec);
             // System.out.println("REC BEFORE NULL2: " + rec.normal);
             PVector direction = Utils.random_on_hemisphere(rec.normal);
-            // return pa.color((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125); // rainbow normals
-            
-            return   getRayColor(new Ray(rec.location, direction), depth -1 ,world); // TODO: divide this by 2 somehow
+            return new PVector((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125); // rainbow
+                                                                                                           // normals
+
+            // return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth
+            // - 1, world), (float) 1); // TODO:
+            // divide
+            // this by
+            // 2
+            // somehow
         }
-        return pa.color(0, 0, ((r.unitDirection.y) * 190));
+        return new PVector(0, 0, ((r.unitDirection.y) * 250));
     }
 }
