@@ -21,7 +21,7 @@ public class Camera {
     }
 
     public void see() {
-        // Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
+        Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
         // Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
         Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
 
@@ -31,8 +31,8 @@ public class Camera {
         Triangle myTriangle = new Triangle(p1, p2, p3);
 
         HittableList world = new HittableList();
-        world.add(myTriangle);
-        // world.add(mySphere);
+        // world.add(myTriangle);
+        world.add(mySphere);
         // world.add(mySecondSphere);
         world.add(myGround);
 
@@ -90,7 +90,7 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int runs_to_average = 1;
+                int runs_to_average = 10;
                 PVector rayColorVectorSum = new PVector(0, 0, 0);
                 for (int z = 0; z < runs_to_average; z++) {
                     PVector rayColorVector = getRayColorVector(rayToPixel, this.max_depth, world);
@@ -119,11 +119,11 @@ public class Camera {
             // System.out.println("REC BEFORE NULL: " + rec);
             // System.out.println("REC BEFORE NULL2: " + rec.normal);
             PVector direction = Utils.random_on_hemisphere(rec.normal);
-            return new PVector((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z + 1) * (float) 125); // rainbow
-                                                                                                           // normals
+            // return new PVector((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z +
+            // 1) * (float) 125); // rainbow
+            // normals
 
-            // return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth
-            // - 1, world), (float) 1); // TODO:
+            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1, world), (float) 1); // TODO:
             // divide
             // this by
             // 2
