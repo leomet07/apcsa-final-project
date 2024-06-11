@@ -39,6 +39,7 @@ public class Renderer extends PApplet {
         textSize(40);
         String text = "" + cam.eye.x + ", " + cam.eye.y + ", " + cam.eye.z;
         text(text, 40, 60);
+        fill(0, 408, 612);
     }
 
 

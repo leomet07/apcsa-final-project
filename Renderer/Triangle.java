@@ -33,10 +33,12 @@ public class Triangle implements Hittable {
         rec.location = r.at(t);
 
         // Triangle centroid
-        PVector centroid = PVector.div(PVector.add(PVector.add(p1, p2), p3), 3);
-        PVector triangle_outward_normal = PVector.sub(rec.location, centroid);
-        triangle_outward_normal.normalize();
-        rec.set_face_normal(r, triangle_outward_normal);
+        // PVector centroid = PVector.div(PVector.add(PVector.add(p1, p2), p3), 3);
+        // PVector triangle_outward_normal = PVector.sub(rec.location, centroid);
+        // triangle_outward_normal.normalize();
+        // rec.set_face_normal(r, triangle_outward_normal);
+        rec.normal = PVector.mult(r.direction, -1);
+        rec.hitHappened = true;
 
         return true;
     }

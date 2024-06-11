@@ -25,14 +25,14 @@ public class Camera {
         Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
         Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
 
-        PVector p1 = new PVector((float) -0.2, (float) 0, (float) -.4);
-        PVector p2 = new PVector((float) .2, (float) 0, (float) -.4);
-        PVector p3 = new PVector((float) 0, (float) .2, (float) -.4);
+        PVector p1 = new PVector((float) -0.2, (float) 0, (float) -3.4);
+        PVector p2 = new PVector((float) .2, (float) 0, (float) -3.4);
+        PVector p3 = new PVector((float) 0, (float) .2, (float) -3.4);
         Triangle myTriangle = new Triangle(p1, p2, p3);
 
         HittableList world = new HittableList();
         world.add(myTriangle);
-        // world.add(mySphere);
+        world.add(mySphere);
         world.add(mySecondSphere);
         world.add(myGround);
 
@@ -90,7 +90,7 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int runs_to_average = 1;
+                int runs_to_average = 20;
                 PVector rayColorVectorSum = new PVector(0, 0, 0);
                 for (int z = 0; z < runs_to_average; z++) {
                     PVector rayColorVector = getRayColorVector(rayToPixel, this.max_depth, world);
@@ -98,7 +98,7 @@ public class Camera {
                 }
                 rayColorVectorSum.div(runs_to_average);
 
-                int rayColor = this.pa.color(rayColorVectorSum.x, rayColorVectorSum.y, rayColorVectorSum.z);
+                int rayColor = this.pa.color(rayColorVectorSum.x, rayColorVectorSum.y, rayColorVectorSum.z, 255);
                 int x = i;
                 int y = j;
                 this.pa.pixels[y * this.image_width + x] = rayColor;
@@ -110,7 +110,7 @@ public class Camera {
 
     public PVector getRayColorVector(Ray r, int depth, HittableList world) {
         if (depth <= 0) {
-            return new PVector(0, 0, 0);
+            return new PVector(0, 0, 0); // if depth 0 is reached, something MUST have hit at least once
         }
 
         Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
@@ -123,12 +123,12 @@ public class Camera {
             // 1) * (float) 125); // rainbow
             // normals
 
-            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1, world), (float) 1); // TODO:
+            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1, world), (float) 0.5); // TODO:
             // divide
             // this by
             // 2
             // somehow
         }
-        return new PVector(0, 0, ((r.unitDirection.y) * 250));
+        return new PVector(255, 255, 255); // if not hit, white
     }
 }
