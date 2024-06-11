@@ -33,7 +33,7 @@ public class Camera {
         HittableList world = new HittableList();
         world.add(myTriangle);
         // world.add(mySphere);
-        // world.add(mySecondSphere);
+        world.add(mySecondSphere);
         world.add(myGround);
 
         // Camera stuffs

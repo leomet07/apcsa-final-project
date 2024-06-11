@@ -12,32 +12,31 @@ public class Triangle implements Hittable {
         this.p3 = p3;
     }
 
-    boolean didRayIntersect(Ray ray) {
+    @Override
+    public boolean hit(Ray r, double tmin, double tmax, Hit rec) {
         // Thanks https://stackoverflow.com/a/42752998
         PVector E1 = PVector.sub(p2, p1);
         PVector E2 = PVector.sub(p3, p1);
         PVector N = PVector.cross(E1, E2, null);
-        float det = -PVector.dot(ray.direction, N);
+        float det = -PVector.dot(r.direction, N);
         float invdet = (float) 1.0 / det;
-        PVector AO = PVector.sub(ray.start, p1);
-        PVector DAO = PVector.cross(AO, ray.direction, null);
+        PVector AO = PVector.sub(r.start, p1);
+        PVector DAO = PVector.cross(AO, r.direction, null);
         float u = PVector.dot(E2, DAO) * invdet;
         float v = -PVector.dot(E1, DAO) * invdet;
         float t = PVector.dot(AO, N) * invdet;
-        return (det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0);
-
-        // return false;
-    }
-
-    @Override
-    public boolean hit(Ray r, double tmin, double tmax, Hit rec) {
-        boolean didHitHappen = didRayIntersect(r);
+        boolean didHitHappen = (det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0);
         if (!didHitHappen) {
             return false;
         }
-        rec.t = 5;
-        rec.location = r.at(5);
-        rec.set_face_normal(r, new PVector(1, 1, 1));
+        rec.t = t;
+        rec.location = r.at(t);
+
+        // Triangle centroid
+        PVector centroid = PVector.div(PVector.add(PVector.add(p1, p2), p3), 3);
+        PVector triangle_outward_normal = PVector.sub(rec.location, centroid);
+        triangle_outward_normal.normalize();
+        rec.set_face_normal(r, triangle_outward_normal);
 
         return true;
     }
