@@ -22,17 +22,17 @@ public class Camera {
 
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
-        // Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
+        Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
         Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
 
-        PVector p1 = new PVector((float) -2, (float) 0, (float) -4);
-        PVector p2 = new PVector((float) 2, (float) 0, (float) -4);
-        PVector p3 = new PVector((float) 0, (float) 2, (float) -4);
+        PVector p1 = new PVector((float) -0.2, (float) 0, (float) -.4);
+        PVector p2 = new PVector((float) .2, (float) 0, (float) -.4);
+        PVector p3 = new PVector((float) 0, (float) .2, (float) -.4);
         Triangle myTriangle = new Triangle(p1, p2, p3);
 
         HittableList world = new HittableList();
-        // world.add(myTriangle);
-        world.add(mySphere);
+        world.add(myTriangle);
+        // world.add(mySphere);
         // world.add(mySecondSphere);
         world.add(myGround);
 
@@ -90,7 +90,7 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int runs_to_average = 10;
+                int runs_to_average = 1;
                 PVector rayColorVectorSum = new PVector(0, 0, 0);
                 for (int z = 0; z < runs_to_average; z++) {
                     PVector rayColorVector = getRayColorVector(rayToPixel, this.max_depth, world);
@@ -115,7 +115,7 @@ public class Camera {
 
         Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
         if (rec.hitHappened) {
-            PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
+            // PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
             // System.out.println("REC BEFORE NULL: " + rec);
             // System.out.println("REC BEFORE NULL2: " + rec.normal);
             PVector direction = Utils.random_on_hemisphere(rec.normal);

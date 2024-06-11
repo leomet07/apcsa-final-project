@@ -13,33 +13,28 @@ public class Triangle implements Hittable {
     }
 
     boolean didRayIntersect(Ray ray) {
-        PVector nearPoint = ray.at((float) 0.0001);
-        PVector farPoint = ray.at(69420);
+        // Thanks https://stackoverflow.com/a/42752998
+        PVector E1 = PVector.sub(p2, p1);
+        PVector E2 = PVector.sub(p3, p1);
+        PVector N = PVector.cross(E1, E2, null);
+        float det = -PVector.dot(ray.direction, N);
+        float invdet = (float) 1.0 / det;
+        PVector AO = PVector.sub(ray.start, p1);
+        PVector DAO = PVector.cross(AO, ray.direction, null);
+        float u = PVector.dot(E2, DAO) * invdet;
+        float v = -PVector.dot(E1, DAO) * invdet;
+        float t = PVector.dot(AO, N) * invdet;
+        return (det >= 1e-6 && t >= 0.0 && u >= 0.0 && v >= 0.0 && (u + v) <= 1.0);
 
-        // PVector triangleNormal =
-
-        return false;
+        // return false;
     }
 
     @Override
     public boolean hit(Ray r, double tmin, double tmax, Hit rec) {
-        PVector nearPoint = r.at((float) tmin);
-        PVector farPoint = r.at((float) tmax);
-
-        PVector triangleNormal = PVector.cross(PVector.sub(p2, p1), PVector.sub(p3, p1), null);
-        triangleNormal.normalize();
-
-        // Find distance from LP1 and LP2 to the plane defined by the triangle
-        // float Dist1 = (R1-P1).dot( Normal );
-        // float Dist2 = (R2-P1).dot( Normal );
-        float dist1 = PVector.dot(PVector.sub(nearPoint, p1), triangleNormal);
-        float dist2 = PVector.dot(PVector.sub(farPoint, p1), triangleNormal);
-
-        if ((dist1 * dist2) >= ((float) 0)) {
-            // no cross
+        boolean didHitHappen = didRayIntersect(r);
+        if (!didHitHappen) {
             return false;
         }
-
         rec.t = 5;
         rec.location = r.at(5);
         rec.set_face_normal(r, new PVector(1, 1, 1));
