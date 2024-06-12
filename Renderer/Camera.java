@@ -90,7 +90,7 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int runs_to_average = 20;
+                int runs_to_average = 3;
                 PVector rayColorVectorSum = new PVector(0, 0, 0);
                 for (int z = 0; z < runs_to_average; z++) {
                     PVector rayColorVector = getRayColorVector(rayToPixel, this.max_depth, world);
