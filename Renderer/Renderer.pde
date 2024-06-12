@@ -23,16 +23,16 @@ public class Renderer extends PApplet {
     public void draw(){
         if (keyPressed) {
             if (key == 'w' || key == 'W') {
-                cam.eye.add(new PVector(0, 0, 0.02));
+                cam.eye.add(new PVector(0, 0, 0.1));
             }
             if (key == 's' || key == 'S') {
-                cam.eye.add(new PVector(0, 0, -0.02));
+                cam.eye.add(new PVector(0, 0, -0.1));
             }
             if (key == 'a' || key == 'A') {
-                cam.eye.add(new PVector(-0.02, 0, 0));
+                cam.eye.add(new PVector(-0.1, 0, 0));
             }
             if (key == 'd' || key == 'D') {
-                cam.eye.add(new PVector(0.02, 0, 0));
+                cam.eye.add(new PVector(0.1, 0, 0));
             }
         }
         cam.see();

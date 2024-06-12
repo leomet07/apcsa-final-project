@@ -23,17 +23,25 @@ public class Camera {
     public void see() {
         Sphere mySphere = new Sphere(new PVector(0, 0, -1), (float) 0.5);
         Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
+        Sphere myThirdSphere = new Sphere(new PVector((float) 0.75, 0, -4), (float) 0.5);
         Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
 
-        PVector p1 = new PVector((float) -0.2, (float) 0, (float) -3.4);
-        PVector p2 = new PVector((float) .2, (float) 0, (float) -3.4);
-        PVector p3 = new PVector((float) 0, (float) .2, (float) -3.4);
+        PVector p1 = new PVector((float) 0, (float) 0, (float) -6); // right angle
+        PVector p2 = new PVector((float) 2, (float) 0, (float) -6);
+        PVector p3 = new PVector((float) 0, (float) 2, (float) -6);
         Triangle myTriangle = new Triangle(p1, p2, p3);
+        PVector a1 = new PVector((float) 0, (float) 2, (float) -6); //
+        PVector a2 = new PVector((float) 2, (float) 0, (float) -6);
+        PVector a3 = new PVector((float) 2, (float) 2, (float) -6); // right corner // NOTE: if triangle not showing
+                                                                    // play around with vertice order
+        Triangle myTriangle2 = new Triangle(a1, a2, a3);
 
         HittableList world = new HittableList();
         world.add(myTriangle);
+        world.add(myTriangle2);
         world.add(mySphere);
         world.add(mySecondSphere);
+        world.add(myThirdSphere);
         world.add(myGround);
 
         // Camera stuffs
