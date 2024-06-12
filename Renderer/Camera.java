@@ -23,20 +23,21 @@ public class Camera {
         this.image_height = (image_height < 1) ? 1 : image_height;
 
         // Initialize world full of Hittables
-        Sphere mySphere = new Sphere(new PVector((float) -0.7, 0, -2), (float) 0.5);
-        Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
-        Sphere myThirdSphere = new Sphere(new PVector((float) 0.75, 0, -4), (float) 0.5);
-        Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100);
+        Sphere mySphere = new Sphere(new PVector((float) -0.7, 0, -2), (float) 0.5, new PVector(0, 0, 0));
+        Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5, new PVector(0, 0, 0));
+        Sphere myThirdSphere = new Sphere(new PVector((float) 0.75, 0, -4), (float) 0.5, new PVector(0, 0, 0));
+        Sphere myGround = new Sphere(new PVector(0, (float) -100.5, -1), (float) 100, new PVector(48, 11, 11)); // brown
+                                                                                                                // ground
 
         PVector p1 = new PVector((float) 0, (float) 0, (float) -6); // right angle
         PVector p2 = new PVector((float) 2, (float) 0, (float) -6);
         PVector p3 = new PVector((float) 0, (float) 2, (float) -6);
-        Triangle myTriangle = new Triangle(p1, p2, p3);
+        Triangle myTriangle = new Triangle(p1, p2, p3, new PVector(0, 0, 200));
         PVector a1 = new PVector((float) 0, (float) 2, (float) -6); //
         PVector a2 = new PVector((float) 2, (float) 0, (float) -6);
         PVector a3 = new PVector((float) 2, (float) 2, (float) -6); // right corner // NOTE: if triangle not showing
                                                                     // play around with vertice order
-        Triangle myTriangle2 = new Triangle(a1, a2, a3);
+        Triangle myTriangle2 = new Triangle(a1, a2, a3, new PVector(0, 0, 200));
 
         world = new HittableList();
         world.add(myTriangle);
@@ -126,9 +127,10 @@ public class Camera {
             // 1) * (float) 125); // rainbow
             // normals
             PVector direction = Utils.random_on_hemisphere(rec.normal); // random bounce away from object's inside
-
             // darken from white on evert hit (hence, mult by 0.5)
-            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1), (float) 0.5);
+            return PVector.add(
+                    PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1), (float) 0.5),
+                    rec.color);
         }
         return new PVector(255, 255, 255); // if not hit, white
     }

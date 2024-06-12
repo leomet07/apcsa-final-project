@@ -1,11 +1,12 @@
 import processing.core.PVector;
 
-public class Sphere implements Hittable {
+public class Sphere extends Hittable {
     PVector center;
     float radius;
     String type = "sphere";
 
-    public Sphere(PVector center, float radius) {
+    public Sphere(PVector center, float radius, PVector color) {
+        super(color);
         this.center = center;
         this.radius = radius;
     }
@@ -34,6 +35,7 @@ public class Sphere implements Hittable {
         PVector outward_normal = PVector.div(PVector.sub(rec.location, this.center),
                 radius);
         rec.set_face_normal(r, outward_normal);
+        rec.color = this.color;
         // System.out.println("After calling helper func: " + rec.normal);
 
         return true;

@@ -23,8 +23,6 @@ public class HittableList extends ArrayList<Hittable> {
         // System.out.println("Set!");
         // System.out.println("Normal should be set (perm): " + rec);
         // System.out.println("Normal should be set (perm)2: " + rec.normal);
-        
-        
 
         return rec;
     }

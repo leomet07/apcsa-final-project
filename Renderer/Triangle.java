@@ -1,12 +1,13 @@
 import processing.core.PVector;
 
-public class Triangle implements Hittable {
+public class Triangle extends Hittable {
     PVector p1;
     PVector p2;
     PVector p3;
     String type = "triangle";
 
-    public Triangle(PVector p1, PVector p2, PVector p3) {
+    public Triangle(PVector p1, PVector p2, PVector p3, PVector color) {
+        super(color);
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -39,6 +40,7 @@ public class Triangle implements Hittable {
         // rec.set_face_normal(r, triangle_outward_normal);
         rec.normal = PVector.mult(r.direction, -1);
         rec.hitHappened = true;
+        rec.color = this.color;
 
         return true;
     }
