@@ -2,7 +2,8 @@ import processing.core.*;
 
 public class Camera {
     PApplet pa;
-    public int max_depth = 10;
+    public static int max_depth = 100;
+    public static int runs_to_average = 50; // default to be very heavy rendering
     public float aspect_ratio = 1 / 1;
     public int image_width = 500;
 
@@ -98,10 +99,9 @@ public class Camera {
                         PVector.mult(pixel_delta_v, j));
                 PVector ray_direction = PVector.sub(pixel_center, this.eye);
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
-                int runs_to_average = 3;
                 PVector rayColorVectorSum = new PVector(0, 0, 0);
                 for (int z = 0; z < runs_to_average; z++) {
-                    PVector rayColorVector = getRayColorVector(rayToPixel, this.max_depth, world);
+                    PVector rayColorVector = getRayColorVector(rayToPixel, Camera.max_depth, world);
                     rayColorVectorSum.add(rayColorVector);
                 }
                 rayColorVectorSum.div(runs_to_average);

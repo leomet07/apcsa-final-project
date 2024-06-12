@@ -1,1 +1,1 @@
-processing-java --sketch="$PWD" --run
+processing-java --sketch="$PWD" --run $1
