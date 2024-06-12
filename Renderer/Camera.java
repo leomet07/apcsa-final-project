@@ -15,13 +15,14 @@ public class Camera {
     public Point lookat = new Point(0, 0, -1); // Point camera is looking at
     public PVector vup = new PVector(0, 1, 0); // Camera-relative "up" direction
 
+    HittableList world;
+
     public Camera(PApplet pa) {
         this.pa = pa;
         this.image_height = (int) (image_width / aspect_ratio);
         this.image_height = (image_height < 1) ? 1 : image_height;
-    }
 
-    public void see() {
+        // Initialize world full of Hittables
         Sphere mySphere = new Sphere(new PVector((float) -0.7, 0, -2), (float) 0.5);
         Sphere mySecondSphere = new Sphere(new PVector(0, 1, -4), (float) 0.5);
         Sphere myThirdSphere = new Sphere(new PVector((float) 0.75, 0, -4), (float) 0.5);
@@ -37,13 +38,16 @@ public class Camera {
                                                                     // play around with vertice order
         Triangle myTriangle2 = new Triangle(a1, a2, a3);
 
-        HittableList world = new HittableList();
+        world = new HittableList();
         world.add(myTriangle);
         world.add(myTriangle2);
         world.add(mySphere);
         world.add(mySecondSphere);
         world.add(myThirdSphere);
         world.add(myGround);
+    }
+
+    public void see() {
 
         // Camera stuffs
         float focal_length = PVector.sub(eye, lookat).mag();
@@ -95,7 +99,7 @@ public class Camera {
                 Ray rayToPixel = new Ray(this.eye, ray_direction);
                 PVector rayColorVectorSum = new PVector(0, 0, 0);
                 for (int z = 0; z < runs_to_average; z++) {
-                    PVector rayColorVector = getRayColorVector(rayToPixel, Camera.max_depth, world);
+                    PVector rayColorVector = getRayColorVector(rayToPixel, Camera.max_depth);
                     rayColorVectorSum.add(rayColorVector);
                 }
                 rayColorVectorSum.div(runs_to_average);
@@ -110,12 +114,12 @@ public class Camera {
         this.pa.updatePixels(); // update the window after changing pixels
     }
 
-    public PVector getRayColorVector(Ray r, int depth, HittableList world) {
+    public PVector getRayColorVector(Ray r, int depth) {
         if (depth <= 0) {
             return new PVector(0, 0, 0); // if depth 0 is reached, something MUST have hit at least once
         }
 
-        Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
+        Hit rec = this.world.hit(r, .0001, Double.MAX_VALUE);
         if (rec.hitHappened) {
             // PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
             // return new PVector((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z +
@@ -124,7 +128,7 @@ public class Camera {
             PVector direction = Utils.random_on_hemisphere(rec.normal); // random bounce away from object's inside
 
             // darken from white on evert hit (hence, mult by 0.5)
-            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1, world), (float) 0.5);
+            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1), (float) 0.5);
         }
         return new PVector(255, 255, 255); // if not hit, white
     }

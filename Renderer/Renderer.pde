@@ -6,7 +6,6 @@ public class Renderer extends PApplet {
 
     Camera cam = new Camera(this);
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(args));
         if (args.length == 0){
             System.out.println("Please specify RENDER or DEBUG mode for this ray tracing engine.");
             System.out.println("Example: ./run.sh DEBUG");
