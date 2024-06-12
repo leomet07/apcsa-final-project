@@ -122,10 +122,6 @@ public class Camera {
 
         Hit rec = this.world.hit(r, .0001, Double.MAX_VALUE);
         if (rec.hitHappened) {
-            // PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
-            // return new PVector((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z +
-            // 1) * (float) 125); // rainbow
-            // normals
             PVector direction = Utils.random_on_hemisphere(rec.normal); // random bounce away from object's inside
             // darken from white on evert hit (hence, mult by 0.5)
             return PVector.add(
