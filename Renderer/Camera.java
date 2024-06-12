@@ -53,33 +53,26 @@ public class Camera {
         float viewport_height = 2 * h * focal_length;
         float viewport_width = viewport_height * (image_width / image_height);
 
-        // // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+        // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
         PVector w = PVector.sub(eye, lookat).normalize(null);
         PVector u = PVector.cross(vup, w, null).normalize(null);
         PVector v = PVector.cross(w, u, null);
 
-        // // Calculate the vectors across the horizontal and down the vertical viewport
-        // // edges.
-        // vec3 viewport_u = viewport_width * u; // Vector across viewport horizontal
-        // edge
+        // Calculate the vectors across the horizontal and down the vertical viewport
         PVector viewport_u = PVector.mult(u, viewport_width);
-        // vec3 viewport_v = viewport_height * -v; // Vector down viewport vertical edge
         PVector viewport_v = PVector.mult(v, -viewport_height);
-
-        // Calculate the horizontal and vertical delta vectors from pixel to pixel.
-        // PVector viewport_u = new PVector(viewport_width, 0, 0);
-        // PVector viewport_v = new PVector(0, -viewport_height, 0);
 
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
         PVector pixel_delta_u = PVector.div(viewport_u, image_width);
         PVector pixel_delta_v = PVector.div(viewport_v, image_height);
 
         // Calculate the location of the upper left pixel.
+
+        // to always LOOK at the "lookat" point (rotate towards it as needed)
         // PVector viewport_upper_left = PVector.sub(
         // PVector.sub(PVector.sub(eye, PVector.mult(w, focal_length)),
         // PVector.div(viewport_u, 2)),
-        // PVector.div(viewport_v, 2)); // to always LOOK at the "lookat" point (rotate
-        // towards it as needed)
+        // PVector.div(viewport_v, 2));
         PVector viewport_upper_left = PVector.sub(
                 PVector.sub(PVector.sub(eye, new PVector(0, 0, focal_length)), PVector.div(viewport_u, 2)),
                 PVector.div(viewport_v, 2)); // to always LOOK forwards
@@ -87,12 +80,13 @@ public class Camera {
         PVector pixel00_loc = PVector.add(viewport_upper_left,
                 PVector.mult(PVector.add(pixel_delta_u, pixel_delta_v), (float) 0.5));
 
-        // System.out.println("P3\n" + image_width + " " + image_height + "\n255\n");
-        this.pa.loadPixels();
+        this.pa.loadPixels(); // for every frame, load all existing pixels
         for (int j = 0; j < image_height; j++) {
             if (j % 25 == 0 || j == image_height - 1) {
-                // System.out.println("\rScanlines remaining: " + (image_height - j) + "
-                // \n\n\n");
+                if (Camera.runs_to_average >= 50) {
+                    System.out.println("\rScanlines remaining: " + (image_height - j)); // only print progress on heavy
+                                                                                        // renders
+                }
             }
             for (int i = 0; i < image_width; i++) {
                 PVector pixel_center = PVector.add(PVector.add(pixel00_loc, PVector.mult(pixel_delta_u, i)),
@@ -113,7 +107,7 @@ public class Camera {
 
             }
         }
-        this.pa.updatePixels();
+        this.pa.updatePixels(); // update the window after changing pixels
     }
 
     public PVector getRayColorVector(Ray r, int depth, HittableList world) {
@@ -124,18 +118,13 @@ public class Camera {
         Hit rec = world.hit(r, .0001, Double.MAX_VALUE);
         if (rec.hitHappened) {
             // PVector N = PVector.sub(r.at((float) rec.t), new PVector(0, 0, -1));
-            // System.out.println("REC BEFORE NULL: " + rec);
-            // System.out.println("REC BEFORE NULL2: " + rec.normal);
-            PVector direction = Utils.random_on_hemisphere(rec.normal);
             // return new PVector((N.x + 1) * (float) 125, (N.y + 1) * (float) 125, (N.z +
             // 1) * (float) 125); // rainbow
             // normals
+            PVector direction = Utils.random_on_hemisphere(rec.normal); // random bounce away from object's inside
 
-            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1, world), (float) 0.5); // TODO:
-            // divide
-            // this by
-            // 2
-            // somehow
+            // darken from white on evert hit (hence, mult by 0.5)
+            return PVector.mult(getRayColorVector(new Ray(rec.location, direction), depth - 1, world), (float) 0.5);
         }
         return new PVector(255, 255, 255); // if not hit, white
     }
